@@ -68,9 +68,11 @@
 }
 
 -(void) orientationChanged:(NSNotification *)notification{
-    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft ||
+    if (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft ||
         [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight ||
-        [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationUnknown){
+        [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationUnknown) &&
+        ![(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"] &&
+        [UIScreen mainScreen].bounds.size.width != 667.0){
         [self presentFullMainMenuController];
     }else{
         [self hideFullMainMenuController];
