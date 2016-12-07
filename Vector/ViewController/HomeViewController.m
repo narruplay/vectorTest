@@ -34,6 +34,7 @@
 #import "AppDelegate.h"
 
 #import "GBDeviceInfo_iOS.h"
+#import "AKMainMenuController.h"
 
 @interface HomeViewController ()
 {
@@ -120,6 +121,8 @@
     [self initializeDataSources];
     
     self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    
+  
 }
 
 - (void)dealloc
@@ -157,6 +160,11 @@
     }
 }
 
+-(void) viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -176,6 +184,8 @@
     {
         [self updateSearch];
     }
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -208,6 +218,10 @@
             // the selected room (if any) is highlighted.
             [self refreshCurrentSelectedCellInChild:YES];
         }
+        if ([AKMainMenuController sharedController].presentingController == nil){
+            [[AKMainMenuController sharedController] setPresentingController:self];
+        }
+        
     }
     
     // Here the actual view size is available, check the background image display if any
@@ -215,7 +229,11 @@
     {
         [self checkAndShowBackgroundImage];
     }
+    
+
 }
+
+
 
 - (void)viewDidLayoutSubviews
 {
@@ -234,6 +252,8 @@
             tableViewMaskLayer.bounds = newBounds;
         }
     }
+    
+
 }
 
 #pragma mark -

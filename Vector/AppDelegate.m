@@ -41,6 +41,8 @@
 
 #import "CallViewController.h"
 
+#import "AKMainMenuController.h"
+
 // Uncomment the following line to use local contacts to discover matrix users.
 //#define MX_USE_CONTACTS_SERVER_SYNC
 
@@ -263,6 +265,7 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
     if ([rootViewController isKindOfClass:[UISplitViewController class]])
     {
         UISplitViewController *splitViewController = (UISplitViewController *)rootViewController;
+
         splitViewController.delegate = self;
         
         _homeNavigationController = [splitViewController.viewControllers objectAtIndex:0];
@@ -301,6 +304,8 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
         }
     }
     
+
+    
     // Sanity check
     NSAssert(_homeViewController, @"Something wrong in Main.storyboard");
     
@@ -324,6 +329,17 @@ NSString *const kAppDelegateNetworkStatusDidChangeNotification = @"kAppDelegateN
     
     return YES;
 }
+
+- (void)splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode{
+    if (displayMode == UISplitViewControllerDisplayModePrimaryHidden){
+        [AKMainMenuController sharedController].isHidden = true;
+        [[AKMainMenuController sharedController] hideFullMainMenuControllerWithAnimation];
+    }else{
+        [AKMainMenuController sharedController].isHidden = false;
+        [[AKMainMenuController sharedController] presentFullMainMenuControllerWithAnimation];
+    }
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
