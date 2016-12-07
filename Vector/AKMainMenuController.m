@@ -70,22 +70,24 @@
 -(void) orientationChanged:(NSNotification *)notification{
     if (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft ||
         [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight ||
-        [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationUnknown) &&
-        ![(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"] &&
+         [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationUnknown)&&
         [UIScreen mainScreen].bounds.size.width != 667.0){
         [self presentFullMainMenuController];
-    }else{
+    }else if (![(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"]){
         [self hideFullMainMenuController];
+    }else{
+        [self presentFullMainMenuController];
     }
 }
 
 -(void) presentMainMenuWithAnimation{
     
+    
     self.partialMainMenuView = [[NSBundle mainBundle] loadNibNamed:@"PartialMainMenuView" owner:self options:nil].firstObject;
     
     UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
     self.partialMainMenuView.frame = currentWindow.bounds;
-    [currentWindow addSubview:self.partialMainMenuView];
+    [self.presentingController.navigationController.view addSubview:self.partialMainMenuView];
 
     self.partialMainMenuView.center = CGPointMake(-self.partialMainMenuView.center.x, self.partialMainMenuView.center.y);
     
@@ -117,8 +119,8 @@
 
     if (self.isHidden == false && [NSStringFromClass(self.presentingController.class) isEqualToString:@"HomeViewController"]){
         self.fullMainMenuView = [[NSBundle mainBundle] loadNibNamed:@"FullMainMenuView" owner:self options:nil].firstObject;
-        self.fullMainMenuView.frame = self.presentingController.view.bounds;
-        [[UIApplication sharedApplication].keyWindow addSubview:self.fullMainMenuView];
+        self.fullMainMenuView.frame = self.presentingController.navigationController.view.bounds;
+        [self.presentingController.navigationController.view addSubview:self.fullMainMenuView];
     }
 }
 
@@ -130,7 +132,7 @@
         self.fullMainMenuView.frame = self.presentingController.view.bounds;
         
         self.fullMainMenuView.center = CGPointMake(-self.fullMainMenuView.center.x, self.fullMainMenuView.center.y);
-        [[UIApplication sharedApplication].keyWindow addSubview:self.fullMainMenuView];
+        [self.presentingController.navigationController.view addSubview:self.fullMainMenuView];
         [UIView animateWithDuration:0.5 animations:^{
             self.fullMainMenuView.center = CGPointMake(-self.fullMainMenuView.center.x, self.fullMainMenuView.center.y);
         } completion:^(BOOL finished) {
